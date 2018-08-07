@@ -3,15 +3,16 @@ const axios = require('axios');
 const nodeUrl = require('url');
 const querystring = require('querystring');
 const fs = require('fs');
+const nodePath = require('path');
 
 const port = 3001;
 
 const routers = {
     '/static': (req, res) => {
-        let path = '../build' + req.url;
+        let path = nodePath.resolve(__dirname, '/build', req.url);
         if (req.url === '/static') {
             res.setHeader('Content-Type', 'text/html');
-            path = '../build/index.html';
+            path = nodePath.resolve(__dirname, '/build/index.html');
         }
 
         if (req.url.indexOf('/js') > -1) {
