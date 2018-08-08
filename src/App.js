@@ -18,7 +18,7 @@ class App extends Component {
     fetchAndIntervalBusInfo = (lineNo) => {
         this.fetchBusInfoInterval && clearInterval(this.fetchBusInfoInterval);
         this.fetchBusInfo(lineNo);
-        this.fetchBusInfoInterval = setInterval(() => this.fetchBusInfo(lineNo), 5000);
+        this.fetchBusInfoInterval = setInterval(() => this.fetchBusInfo(lineNo), 15000);
     }
 
     fetchBusInfo = (lineNo) => {

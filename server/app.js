@@ -24,9 +24,16 @@ const routers = {
             res.setHeader('Content-Type', 'text/css');
         }
 
-        const html = fs.readFileSync(path, 'utf-8');
+        try {
+            const html = fs.readFileSync(path, 'utf-8');
 
-        res.end(html);
+            res.end(html);
+        } catch (e) {
+            res.statusCode = 404;
+            res.end();
+        }
+
+
     },
     '/service-worker.js': (req, res) => {
         const path = nodePath.resolve('./build/service-worker.js');
