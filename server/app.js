@@ -14,6 +14,7 @@ const routers = {
             res.setHeader('Content-Type', 'text/html');
             path = nodePath.resolve('./build/index.html');
         }
+
         console.log(path);
 
         if (req.url.indexOf('/js') > -1) {
