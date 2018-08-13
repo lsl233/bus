@@ -93,7 +93,7 @@ class App extends Component {
                         style={{
                             position: 'fixed',
                             right: 8,
-                            bottom: 8
+                            bottom: 40
                         }}
                         type="primary" size="small" inline>反向</Button>
                 </WingBlank>
