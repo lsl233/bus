@@ -12,21 +12,26 @@ class App extends Component {
             stations: [],
             buses: [],
             lineNo: null,
+            reverse: 1,
         }
     }
 
-    fetchAndIntervalBusInfo = (lineNo) => {
-        this.fetchBusInfoInterval && clearInterval(this.fetchBusInfoInterval);
-        this.fetchBusInfo(lineNo);
-        this.fetchBusInfoInterval = setInterval(() => this.fetchBusInfo(lineNo), 15000);
+    componentDidMount() {
+        console.log(navigator)
     }
 
-    fetchBusInfo = (lineNo) => {
+    fetchAndIntervalBusInfo = () => {
+        this.fetchBusInfoInterval && clearInterval(this.fetchBusInfoInterval);
+        this.fetchBusInfo();
+        this.fetchBusInfoInterval = setInterval(() => this.fetchBusInfo(), 15000);
+    }
+
+    fetchBusInfo = () => {
+        const { reverse, lineNo } = this.state;
         if (!lineNo) {
             this.fetchBusInfoInterval && clearInterval(this.fetchBusInfoInterval);
-            return;
         }
-        axios.get('/bus/info', {params: { lineNo }})
+        axios.get('/bus/info', {params: { lineNo, direction: Number(reverse) }})
             .then(response => {
                 const busInfo = response.data.jsonr.data;
                 console.log(busInfo);
@@ -49,28 +54,28 @@ class App extends Component {
         return isOnStations
     }
 
-    searchOnChange = (value) => {
-        this.setState({ lineNo: value });
+    searchOnSubmit = (value) => {
+        this.setState({ lineNo: value }, this.fetchAndIntervalBusInfo);
     }
 
-    searchOnSubmit = (evt) => {
-        this.fetchAndIntervalBusInfo(evt);
+    reverse = () => {
+        this.setState({ reverse: !this.state.reverse }, this.fetchAndIntervalBusInfo);
     }
 
     render() {
-        const { stations, lineNo } = this.state;
+        const { stations } = this.state;
         return (
             <div className="App">
                 <SearchBar
                     placeholder="Search"
                     maxLength={8}
-                    value={lineNo}
-                    onChange={this.searchOnChange}
                     onSubmit={this.searchOnSubmit}
                 />
                 <WhiteSpace size="lg" />
-                <WingBlank size="lg">
-                    <Steps size="small" status="process" current={-1}>
+                <WingBlank size="lg" onClick={this.reverse}>
+                    <Steps size="small" status="process" current={-1} style={{
+                        width: '60%'
+                    }}>
                         {
                             stations.map((item, idx) => {
                                 return (

@@ -26,7 +26,6 @@ const routers = {
 
         try {
             const html = fs.readFileSync(path, 'utf-8');
-
             res.end(html);
         } catch (e) {
             res.statusCode = 404;
