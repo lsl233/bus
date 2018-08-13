@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Steps, WingBlank, WhiteSpace, SearchBar} from 'antd-mobile';
+import {Steps, WingBlank, WhiteSpace, SearchBar, Button} from 'antd-mobile';
 import axios from 'axios';
 
 const Step = Steps.Step;
@@ -88,6 +88,14 @@ class App extends Component {
                             })
                         }
                     </Steps>
+                    <Button
+                        onClick={this.reverse}
+                        style={{
+                            position: 'fixed',
+                            right: 8,
+                            bottom: 8
+                        }}
+                        type="primary" size="small" inline>反向</Button>
                 </WingBlank>
             </div>
         );
