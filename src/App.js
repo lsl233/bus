@@ -24,15 +24,19 @@ class App extends Component {
     fetchAndIntervalBusInfo = () => {
         this.fetchBusInfoInterval && clearInterval(this.fetchBusInfoInterval);
         this.fetchBusInfo();
-        this.fetchBusInfoInterval = setInterval(() => this.fetchBusInfo(), 15000);
+        this.fetchBusInfoInterval = setInterval(() => this.fetchBusInfo(false), 15000);
     }
 
-    fetchBusInfo = () => {
+    fetchBusInfo = (isLoading = true) => {
         const { reverse, lineNo, loading } = this.state;
         if (!lineNo) {
             this.fetchBusInfoInterval && clearInterval(this.fetchBusInfoInterval);
         }
-        if (loading) return;
+        if (isLoading === true) {
+            if (loading) return;
+            this.setState({loading: true});
+        }
+
         axios.get('/bus/info', {params: { lineNo, direction: Number(reverse) }})
             .then(response => {
                 const busInfo = response.data.jsonr.data;
@@ -45,8 +49,6 @@ class App extends Component {
                 })
             })
             .catch((error) => alert(JSON.stringify(error)));
-
-        this.setState({loading: true});
     }
 
     isOnStations = (station) => {
