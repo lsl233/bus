@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Steps, WingBlank, WhiteSpace, SearchBar, Button} from 'antd-mobile';
+import {Steps, WingBlank, WhiteSpace, SearchBar, Button, Flex, Icon} from 'antd-mobile';
 import axios from 'axios';
 
 const Step = Steps.Step;
@@ -13,6 +13,7 @@ class App extends Component {
             buses: [],
             lineNo: null,
             reverse: 1,
+            loading: false,
         }
     }
 
@@ -27,10 +28,11 @@ class App extends Component {
     }
 
     fetchBusInfo = () => {
-        const { reverse, lineNo } = this.state;
+        const { reverse, lineNo, loading } = this.state;
         if (!lineNo) {
             this.fetchBusInfoInterval && clearInterval(this.fetchBusInfoInterval);
         }
+        if (loading) return;
         axios.get('/bus/info', {params: { lineNo, direction: Number(reverse) }})
             .then(response => {
                 const busInfo = response.data.jsonr.data;
@@ -38,9 +40,13 @@ class App extends Component {
                 this.setState({
                     stations: busInfo.stations,
                     targetOrder: busInfo.targetOrder,
-                    buses: busInfo.buses
+                    buses: busInfo.buses,
+                    loading: false
                 })
             })
+            .catch((error) => alert(JSON.stringify(error)));
+
+        this.setState({loading: true});
     }
 
     isOnStations = (station) => {
@@ -63,39 +69,48 @@ class App extends Component {
     }
 
     render() {
-        const { stations } = this.state;
+        const { stations, loading } = this.state;
         return (
             <div className="App">
                 <SearchBar
-                    placeholder="Search"
+                    placeholder="请输入公交车线路"
                     maxLength={8}
                     onSubmit={this.searchOnSubmit}
                 />
                 <WhiteSpace size="lg" />
                 <WingBlank size="lg" onClick={this.reverse}>
-                    <Steps size="small" status="process" current={-1} style={{
-                        width: '60%'
-                    }}>
-                        {
-                            stations.map((item, idx) => {
-                                return (
-                                    <Step
-                                        key={item.order}
-                                        icon={<span>{idx}</span>}
-                                        status={this.isOnStations(item) && 'finish'}
-                                        title={item.sn}/>
-                                )
-                            })
-                        }
-                    </Steps>
-                    <Button
-                        onClick={this.reverse}
-                        style={{
-                            position: 'fixed',
-                            right: 8,
-                            bottom: 40
-                        }}
-                        type="primary" size="small" inline>反向</Button>
+                    {
+                        loading
+                            ?
+                            <Flex justify="center" style={{marginTop: '15%'}}>
+                                <Icon type="loading" size="lg"/>
+                            </Flex>
+                            :
+                            <Steps size="small" status="process" current={-1}>
+                                {
+                                    stations.map((item, idx) => {
+                                        return (
+                                            <Step
+                                                key={item.order}
+                                                icon={<span>{idx}</span>}
+                                                status={this.isOnStations(item) && 'finish'}
+                                                title={item.sn}/>
+                                        )
+                                    })
+                                }
+                            </Steps>
+                    }
+                    {
+                        stations.length > 0 &&
+                        <Button
+                            onClick={this.reverse}
+                            style={{
+                                position: 'fixed',
+                                right: 8,
+                                bottom: 40
+                            }}
+                            type="primary" size="small" inline>反向</Button>
+                    }
                 </WingBlank>
             </div>
         );
