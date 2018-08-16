@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Steps, WingBlank, WhiteSpace, SearchBar, Button, Flex, Icon} from 'antd-mobile';
+import History from './containers/History';
 import axios from 'axios';
 
 const Step = Steps.Step;
@@ -15,10 +16,6 @@ class App extends Component {
             reverse: 1,
             loading: false,
         }
-    }
-
-    componentDidMount() {
-        console.log(navigator)
     }
 
     fetchAndIntervalBusInfo = () => {
@@ -79,6 +76,7 @@ class App extends Component {
                     maxLength={8}
                     onSubmit={this.searchOnSubmit}
                 />
+                <History />
                 <WhiteSpace size="lg" />
                 <WingBlank size="lg" onClick={this.reverse}>
                     {
