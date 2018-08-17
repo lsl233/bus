@@ -50,7 +50,7 @@ const routers = {
             .then((response) => {
                 const data = response.data.replace('**YGKJ', '').replace('YGKJ##', '');
                 res.statusCode = 200;
-                res.setHeader('Content-Type', 'text/json');
+                res.setHeader('Content-Type', 'text/json;charset=utf-8');
                 res.setHeader('Access-Control-Allow-Origin','*');
                 res.end(data);
             })

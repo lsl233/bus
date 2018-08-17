@@ -1,20 +1,13 @@
-import React, {Component} from 'react';
-import {Steps, WingBlank, WhiteSpace, SearchBar, Button, Flex, Icon} from 'antd-mobile';
-import History from './containers/History';
+import React, { Component } from 'react';
+import { WingBlank, WhiteSpace, SearchBar } from 'antd-mobile';
 import axios from 'axios';
-
-const Step = Steps.Step;
+import Router from './components/Router';
 
 class App extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            stations: [],
-            buses: [],
-            lineNo: null,
-            reverse: 1,
-            loading: false,
         }
     }
 
@@ -31,10 +24,10 @@ class App extends Component {
         }
         if (isLoading === true) {
             if (loading) return;
-            this.setState({loading: true});
+            this.setState({ loading: true });
         }
 
-        axios.get('/bus/info', {params: { lineNo, direction: Number(reverse) }})
+        axios.get('/bus/info', { params: { lineNo, direction: Number(reverse) } })
             .then(response => {
                 const busInfo = response.data.jsonr.data;
                 console.log(busInfo);
@@ -48,69 +41,21 @@ class App extends Component {
             .catch((error) => alert(JSON.stringify(error)));
     }
 
-    isOnStations = (station) => {
-        const { buses } = this.state;
-        let isOnStations = false;
-        for (const bus of buses) {
-            if (bus.order === station.order) {
-                isOnStations = true;
-            }
-        }
-        return isOnStations
-    }
-
     searchOnSubmit = (value) => {
         this.setState({ lineNo: value }, this.fetchAndIntervalBusInfo);
     }
 
-    reverse = () => {
-        this.setState({ reverse: !this.state.reverse }, this.fetchAndIntervalBusInfo);
-    }
-
     render() {
-        const { stations, loading } = this.state;
         return (
-            <div className="App">
+            <div>
                 <SearchBar
                     placeholder="请输入公交车线路"
                     maxLength={8}
                     onSubmit={this.searchOnSubmit}
                 />
-                <History />
-                <WhiteSpace size="lg" />
-                <WingBlank size="lg" onClick={this.reverse}>
-                    {
-                        loading
-                            ?
-                            <Flex justify="center" style={{marginTop: '15%'}}>
-                                <Icon type="loading" size="lg"/>
-                            </Flex>
-                            :
-                            <Steps size="small" status="process" current={-1}>
-                                {
-                                    stations.map((item, idx) => {
-                                        return (
-                                            <Step
-                                                key={item.order}
-                                                icon={<span>{idx}</span>}
-                                                status={this.isOnStations(item) && 'finish'}
-                                                title={item.sn}/>
-                                        )
-                                    })
-                                }
-                            </Steps>
-                    }
-                    {
-                        stations.length > 0 &&
-                        <Button
-                            onClick={this.reverse}
-                            style={{
-                                position: 'fixed',
-                                right: 8,
-                                bottom: 40
-                            }}
-                            type="primary" size="small" inline>反向</Button>
-                    }
+                <WhiteSpace size="lg"/>
+                <WingBlank size="lg">
+                    <Router />
                 </WingBlank>
             </div>
         );
