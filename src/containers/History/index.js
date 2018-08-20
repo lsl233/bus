@@ -31,7 +31,7 @@ export default class History extends Component {
                         <li key={key}>
                             <Flex justify="between" align="center"
                                   onClick={() => this.props.router.go(`/BusList/${lineNo}`)}>
-                                <span>{lineNo}</span>
+                                <span>{lineNo}路</span>
                                 <Icon
                                     type="cross"
                                     onClick={(evt) => this.removeHistoryItem(evt, lineNo)}
