@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, Flex, Icon, Steps } from 'antd-mobile';
 import axios from 'axios';
 import storage from '../../utils/storage';
+import './style.scss';
 
 const Step = Steps.Step;
 
