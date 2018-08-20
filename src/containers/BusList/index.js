@@ -14,7 +14,7 @@ class BusList extends Component {
             buses: [],
             lineNo: null,
             reverse: 1,
-            loading: false,
+            loading: false
         }
     }
 
