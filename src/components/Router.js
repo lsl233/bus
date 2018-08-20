@@ -56,7 +56,7 @@ export default class Router extends Component {
                 const match = re.exec(hash);
 
                 if (match) {
-                    const [url, ...values] = match;
+                    const [, ...values] = match;
                     params = keys.reduce((memo, key, index) => {
                         memo[key.name] = values[index];
                         return memo;
