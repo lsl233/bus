@@ -1,61 +1,47 @@
 import React, { Component } from 'react';
 import { WingBlank, WhiteSpace, SearchBar } from 'antd-mobile';
-import axios from 'axios';
 import Router from './components/Router';
 
 class App extends Component {
-
     constructor(props) {
         super(props);
+
         this.state = {
+            lineNo: ''
         }
     }
 
-    fetchAndIntervalBusInfo = () => {
-        this.fetchBusInfoInterval && clearInterval(this.fetchBusInfoInterval);
-        this.fetchBusInfo();
-        this.fetchBusInfoInterval = setInterval(() => this.fetchBusInfo(false), 15000);
+    componentDidMount() {
+        window.addEventListener('hashchange', this.getLineNo, false);
+        window.addEventListener('load', this.getLineNo, false)
     }
 
-    fetchBusInfo = (isLoading = true) => {
-        const { reverse, lineNo, loading } = this.state;
-        if (!lineNo) {
-            this.fetchBusInfoInterval && clearInterval(this.fetchBusInfoInterval);
+    getLineNo = () => {
+        const hash = window.location.hash.substring(1);
+        if (hash.indexOf('/BusList') === 0) {
+            const sp = hash.split('/');
+            this.setState({lineNo: sp[sp.length - 1]});
+            return;
         }
-        if (isLoading === true) {
-            if (loading) return;
-            this.setState({ loading: true });
-        }
-
-        axios.get('/bus/info', { params: { lineNo, direction: Number(reverse) } })
-            .then(response => {
-                const busInfo = response.data.jsonr.data;
-                console.log(busInfo);
-                this.setState({
-                    stations: busInfo.stations,
-                    targetOrder: busInfo.targetOrder,
-                    buses: busInfo.buses,
-                    loading: false
-                })
-            })
-            .catch((error) => alert(JSON.stringify(error)));
-    }
-
-    searchOnSubmit = (value) => {
-        this.setState({ lineNo: value }, this.fetchAndIntervalBusInfo);
+        this.setState({lineNo: ''});
+        return;
     }
 
     render() {
+        const { lineNo } = this.state;
         return (
             <div>
                 <SearchBar
                     placeholder="请输入公交车线路"
                     maxLength={8}
-                    onSubmit={this.searchOnSubmit}
+                    value={lineNo}
+                    onChange={(lineNo) => this.setState({ lineNo })}
+                    onSubmit={(lineNo) => Router.go(`/BusList/${lineNo}`)}
+                    onFocus={() => Router.go(`/History`)}
                 />
                 <WhiteSpace size="lg"/>
                 <WingBlank size="lg">
-                    <Router />
+                    <Router/>
                 </WingBlank>
             </div>
         );

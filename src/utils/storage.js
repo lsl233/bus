@@ -1,5 +1,8 @@
 class Storage {
     constructor() {
+        if (!window.localStorage) {
+            alert('不支持localStorage');
+        }
         this.storage = window.localStorage;
     }
 
@@ -8,7 +11,7 @@ class Storage {
     }
 
     get(key) {
-        const data = this.storage.get(key);
+        const data = this.storage.getItem(key);
         try {
             return JSON.parse(data);
         } catch (e) {

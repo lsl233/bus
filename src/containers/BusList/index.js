@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, Flex, Icon, Steps } from 'antd-mobile';
 import axios from 'axios';
 import storage from '../../utils/storage';
+import './style.scss';
 
 const Step = Steps.Step;
 
@@ -14,8 +15,12 @@ class BusList extends Component {
             buses: [],
             lineNo: null,
             reverse: 1,
-            loading: false,
+            loading: false
         }
+    }
+
+    componentDidMount() {
+        this.fetchAndIntervalBusInfo();
     }
 
     fetchAndIntervalBusInfo = () => {
@@ -25,10 +30,12 @@ class BusList extends Component {
     }
 
     fetchBusInfo = (isLoading = true) => {
-        const { reverse, lineNo, loading } = this.state;
+        const { lineNo } = this.props.router.params;
+        const { reverse, loading } = this.state;
         if (!lineNo) {
             this.fetchBusInfoInterval && clearInterval(this.fetchBusInfoInterval);
         }
+
         if (isLoading === true) {
             if (loading) return;
             this.setState({ loading: true });
@@ -43,6 +50,7 @@ class BusList extends Component {
                     history.splice(idx, 1);
                 }
                 history.unshift(lineNo);
+
                 storage.set('history', history);
 
                 this.setState({
@@ -57,6 +65,17 @@ class BusList extends Component {
 
     reverse = () => {
         this.setState({ reverse: !this.state.reverse }, this.fetchAndIntervalBusInfo);
+    }
+
+    isOnStations = (station) => {
+        const { buses } = this.state;
+        let isOnStations = false;
+        for (const bus of buses) {
+            if (bus.order === station.order) {
+                isOnStations = true;
+            }
+        }
+        return isOnStations
     }
 
     render() {
