@@ -7,15 +7,24 @@ class App extends Component {
         super(props);
 
         this.state = {
-            lineNo: (() => {
-                const hash = window.location.hash.substring(1);
-                if (hash.indexOf('/BusList') === 0) {
-                    const sp = hash.split('/');
-                    return sp[sp.length - 1];
-                }
-                return '';
-            })()
+            lineNo: ''
         }
+    }
+
+    componentDidMount() {
+        window.addEventListener('hashchange', this.getLineNo, false);
+        window.addEventListener('load', this.getLineNo, false)
+    }
+
+    getLineNo = () => {
+        const hash = window.location.hash.substring(1);
+        if (hash.indexOf('/BusList') === 0) {
+            const sp = hash.split('/');
+            this.setState({lineNo: sp[sp.length - 1]});
+            return;
+        }
+        this.setState({lineNo: ''});
+        return;
     }
 
     render() {
