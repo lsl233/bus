@@ -19,7 +19,7 @@ export default class History extends Component {
                     history.map((name) => (
                         <li>
                             <Flex justify="between" align="center">
-                                <span>{name}</span><Icon type="cross" />
+                                <span>{name}</span><Icon color="slategray" type="cross" />
                             </Flex>
                         </li>
                     ))
