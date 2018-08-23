@@ -5,7 +5,7 @@ const querystring = require('querystring');
 const fs = require('fs');
 const nodePath = require('path');
 
-const port = 3001;
+const port = 80;
 
 function getLineId(lineNo) {
     const lineType = lineNo[lineNo.length - 1];
