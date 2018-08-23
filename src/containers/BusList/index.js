@@ -15,7 +15,8 @@ class BusList extends Component {
             buses: [],
             lineNo: null,
             reverse: 1,
-            loading: false
+            loading: false,
+            errMsg: ''
         }
     }
 
@@ -43,7 +44,10 @@ class BusList extends Component {
 
         axios.get('/bus/info', { params: { lineNo, direction: Number(reverse) } })
             .then(response => {
-                const busInfo = response.data.jsonr.data;
+                const jsonr = response.data.jsonr;
+                const busInfo = jsonr.data;
+                if (jsonr.errmsg) throw 'lineError';
+
                 const history = storage.get('history') || [];
                 const idx = history.indexOf(lineNo);
                 if (idx > -1) {
@@ -60,7 +64,14 @@ class BusList extends Component {
                     loading: false
                 })
             })
-            .catch((error) => this.fetchBusInfoInterval && clearInterval(this.fetchBusInfoInterval));
+            .catch((error) => {
+                console.error(error);
+                alert('路线错误');
+                this.setState({
+                    loading: false
+                });
+                this.fetchBusInfoInterval && clearInterval(this.fetchBusInfoInterval)
+            });
     }
 
     reverse = () => {
@@ -85,7 +96,7 @@ class BusList extends Component {
                 {
                     loading
                         ?
-                        <Flex justify="center" style={{marginTop: '15%'}}>
+                        <Flex justify="center" style={{ marginTop: '15%' }}>
                             <Icon type="loading" size="lg"/>
                         </Flex>
                         :
@@ -110,7 +121,7 @@ class BusList extends Component {
                         style={{
                             position: 'fixed',
                             right: 8,
-                            bottom: 40
+                            bottom: '30%'
                         }}
                         type="primary" size="small" inline>反向</Button>
                 }
