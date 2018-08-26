@@ -46,7 +46,9 @@ class BusList extends Component {
             .then(response => {
                 const jsonr = response.data.jsonr;
                 const busInfo = jsonr.data;
-                if (jsonr.errmsg) throw 'lineError';
+                if (jsonr.errmsg) {
+                    throw 'lineError';
+                }
 
                 const history = storage.get('history') || [];
                 const idx = history.indexOf(lineNo);

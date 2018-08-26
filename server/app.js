@@ -5,7 +5,7 @@ const querystring = require('querystring');
 const fs = require('fs');
 const nodePath = require('path');
 
-const port = 80;
+const port = 3001;
 
 function getLineId(lineNo) {
     const lineType = lineNo[lineNo.length - 1];
@@ -75,12 +75,18 @@ function notFound (req, res) {
 }
 
 const server = http.createServer((req, res) => {
+    console.log('[path]', req.url);
     const path = req.url.split('?')[0];
-    console.log('[path]', path);
     if (path.indexOf('/static') > -1) {
         return routers['/static'](req, res);
     }
-    routers[path] ? routers[path](req, res) : notFound(req, res);
+
+    try {
+        routers[path] ? routers[path](req, res) : notFound(req, res);
+    } catch (e) {
+        console.error(`[${req.url} ERROR]`, e);
+    }
+
 });
 
 server.listen(port, () => {
