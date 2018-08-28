@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { WingBlank, WhiteSpace, SearchBar } from 'antd-mobile';
-import Router from './components/Router';
+import Router from '../../components/Router';
 
 class App extends Component {
     constructor(props) {
