@@ -13,12 +13,10 @@ function getLineId(lineNo) {
 const routers = {
     '/static': (req, res) => {
         let path = nodePath.resolve('./build' + req.url);
-        if (req.url === '/static') {
+        if (req.url === '/static' || req.url === '/') {
             res.setHeader('Content-Type', 'text/html');
             path = nodePath.resolve('./build/index.html');
         }
-
-        console.log(path);
 
         if (req.url.indexOf('/js') > -1) {
             res.setHeader('Content-Type', 'application/x-javascript');
@@ -35,10 +33,7 @@ const routers = {
             res.statusCode = 404;
             res.end();
         }
-
-
     },
-
     '/service-worker.js': (req, res) => {
         const path = nodePath.resolve('./build/service-worker.js');
         const javascript = fs.readFileSync(path, 'utf-8');

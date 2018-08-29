@@ -4,7 +4,7 @@ function createServer (port, routers, options) {
     const server = http.createServer((req, res) => {
         console.log('[path]', req.url);
         const path = req.url.split('?')[0];
-        if (path.indexOf('/static') > -1) {
+        if (path.indexOf('/static') > -1 || path === '/') {
             return routers['/static'](req, res);
         }
 

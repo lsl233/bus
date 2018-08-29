@@ -1,4 +1,4 @@
-const createServer = require('../../nfile/server/server');
+const createServer = require('./server');
 const routers = require('./routers');
 
 createServer(3001, routers, {
