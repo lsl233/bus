@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { WingBlank, WhiteSpace, SearchBar } from 'antd-mobile';
+import { Provider, connect } from 'react-redux';
 import Router from '../../components/Router';
 
 class App extends Component {
