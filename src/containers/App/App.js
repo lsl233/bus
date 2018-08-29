@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import { WingBlank, WhiteSpace, SearchBar } from 'antd-mobile';
+import { createStore } from 'redux';
 import { Provider, connect } from 'react-redux';
+import counter from '../../actions';
 import Router from '../../components/Router';
+
+const store = createStore(counter);
 
 class App extends Component {
     constructor(props) {
@@ -31,7 +35,7 @@ class App extends Component {
     render() {
         const { lineNo } = this.state;
         return (
-            <div>
+            <Provider store={store}>
                 <SearchBar
                     placeholder="请输入公交车线路"
                     maxLength={8}
@@ -44,7 +48,7 @@ class App extends Component {
                 <WingBlank size="lg">
                     <Router/>
                 </WingBlank>
-            </div>
+            </Provider>
         );
     }
 }
