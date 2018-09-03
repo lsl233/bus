@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Flex, Icon, Steps } from 'antd-mobile';
 import axios from 'axios';
-import { connect } from 'react-redux';
 import storage from '../../utils/storage';
-import { increment } from '../../redux/actions';
 import './style.scss';
 
 const Step = Steps.Step;
@@ -79,7 +77,6 @@ class BusList extends Component {
     }
 
     reverse = () => {
-        this.props.increment();
         this.setState({ reverse: !this.state.reverse }, this.fetchAndIntervalBusInfo);
     }
 
@@ -96,7 +93,6 @@ class BusList extends Component {
 
     render() {
         const { stations, loading } = this.state;
-        console.log('this.props', this.props);
         return (
             <section>
                 {
@@ -121,7 +117,7 @@ class BusList extends Component {
                         </Steps>
                 }
                 {
-                    stations.length === 0 &&
+                    stations.length > 0 &&
                     <Button
                         onClick={this.reverse}
                         style={{
@@ -136,11 +132,4 @@ class BusList extends Component {
     }
 }
 
-export default connect((state, props) => {
-    console.log(state, props);
-    return {
-        num: state.num
-    };
-}, (dispatch, props) => {
-    return { increment: increment(dispatch) };
-})(BusList);
+export default BusList;
