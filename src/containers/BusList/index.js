@@ -56,9 +56,9 @@ class BusList extends Component {
 
         axios.get('/bus/info', { params: { lineNo, direction: Number(reverse) } })
             .then(response => {
-                const jsonr = response.data.jsonr;
-                const busInfo = jsonr.data;
-                if (jsonr.errmsg) {
+                console.log(response)
+                const { stations, buses, errmsg } = response.data;
+                if (errmsg) {
                     return 'lineError';
                 }
 
@@ -74,9 +74,8 @@ class BusList extends Component {
                 storage.set('history', history);
 
                 this.setState({
-                    stations: busInfo.stations,
-                    targetOrder: busInfo.targetOrder,
-                    buses: busInfo.buses,
+                    stations,
+                    buses,
                     loading: false
                 })
             })
