@@ -93,11 +93,15 @@ export default class Router extends Component {
                 {
                     Current
                     &&
-                    <Current key={new Date().getTime()} router={{
-                        go: Router.go,
-                        replace: Router.replace,
-                        params
-                    }}/>
+                    <Current
+                        key={new Date().getTime()}
+                        updateLineNo={this.props.updateLineNo}
+                        router={{
+                            go: Router.go,
+                            replace: Router.replace,
+                            params
+                        }}
+                    />
                 }
             </section>
         )

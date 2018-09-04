@@ -12,13 +12,12 @@ class App extends Component {
     }
 
     componentDidMount() {
-        this.getLineNo();
+        this.updateLineNo();
     }
 
-    getLineNo = () => {
+    updateLineNo = () => {
         setTimeout(() => {
-            console.log(Router.currentParams.lineNo)
-            this.setState({ lineNo: Router.currentParams.lineNo.toString() });
+            this.setState({ lineNo: Router.currentParams.lineNo });
         }, 100);
     }
 
