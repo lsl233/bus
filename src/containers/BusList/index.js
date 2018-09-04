@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, Flex, Icon, Steps } from 'antd-mobile';
 import axios from 'axios';
 import storage from '../../utils/storage';
+import location from '../../utils/location';
 import './style.scss';
 import Router from '../../components/Router';
 
@@ -23,6 +24,10 @@ class BusList extends Component {
 
     componentDidMount() {
         this.fetchAndIntervalBusInfo();
+        location.getCurrentPosition().then((position) => {
+            console.log(position);
+            alert(JSON.stringify(position))
+        })
     }
 
     componentWillReceiveProps(nextProps) {
@@ -64,8 +69,6 @@ class BusList extends Component {
 
                 const history = (storage.get('history') || []).filter((item) => item.lineNo !== lineNo);
 
-                console.log('history.unshif', history)
-
                 history.unshift({
                     lineNo,
                     reverse
@@ -94,15 +97,15 @@ class BusList extends Component {
         Router.replace(`/BusList/${lineNo}/${!reverse}`);
     }
 
-    isOnStations = (station) => {
+    getStationsNum = (station) => {
         const { buses } = this.state;
-        let isOnStations = false;
+        let num = 0;
         for (const bus of buses) {
             if (bus.order === station.order) {
-                isOnStations = true;
+                num++;
             }
         }
-        return isOnStations
+        return num
     }
 
     render() {
@@ -119,12 +122,13 @@ class BusList extends Component {
                         <Steps size="small" status="process" current={-1}>
                             {
                                 stations.map((item, idx) => {
+                                    const num = this.getStationsNum(item);
                                     return (
                                         <Step
                                             key={item.order}
                                             icon={<span>{idx + 1}</span>}
-                                            status={this.isOnStations(item) && 'finish'}
-                                            title={item.sn}/>
+                                            status={ num && 'finish'}
+                                            title={(<span>{item.sn}<span style={{ marginLeft: 8, color: '#108ee9' }}>{num > 0 ? ('* ' + num) : ''}</span></span>)} />
                                     )
                                 })
                             }
