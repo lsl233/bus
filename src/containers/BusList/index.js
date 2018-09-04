@@ -3,6 +3,7 @@ import { Button, Flex, Icon, Steps } from 'antd-mobile';
 import axios from 'axios';
 import storage from '../../utils/storage';
 import './style.scss';
+import Router from '../../components/Router';
 
 const Step = Steps.Step;
 
@@ -14,7 +15,7 @@ class BusList extends Component {
             stations: [],
             buses: [],
             lineNo: null,
-            reverse: 1,
+            reverse: true,
             loading: false,
             errMsg: ''
         }
@@ -24,6 +25,16 @@ class BusList extends Component {
         this.fetchAndIntervalBusInfo();
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (this.props.router.params.reverse !== nextProps.router.params.reverse) {
+            this.fetchAndIntervalBusInfo();
+        }
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.fetchBusInfoInterval);
+    }
+
     fetchAndIntervalBusInfo = () => {
         this.fetchBusInfoInterval && clearInterval(this.fetchBusInfoInterval);
         this.fetchBusInfo();
@@ -31,8 +42,9 @@ class BusList extends Component {
     }
 
     fetchBusInfo = (isLoading = true) => {
-        const { lineNo } = this.props.router.params;
-        const { reverse, loading } = this.state;
+        const { lineNo, reverse } = this.props.router.params;
+        const { loading } = this.state;
+        
         if (!lineNo) {
             this.fetchBusInfoInterval && clearInterval(this.fetchBusInfoInterval);
         }
@@ -50,12 +62,14 @@ class BusList extends Component {
                     return 'lineError';
                 }
 
-                const history = storage.get('history') || [];
-                const idx = history.indexOf(lineNo);
-                if (idx > -1) {
-                    history.splice(idx, 1);
-                }
-                history.unshift(lineNo);
+                const history = (storage.get('history') || []).filter((item) => item.lineNo !== lineNo);
+
+                console.log('history.unshif', history)
+
+                history.unshift({
+                    lineNo,
+                    reverse
+                });
 
                 storage.set('history', history);
 
@@ -77,7 +91,8 @@ class BusList extends Component {
     }
 
     reverse = () => {
-        this.setState({ reverse: !this.state.reverse }, this.fetchAndIntervalBusInfo);
+        const { lineNo, reverse } = this.props.router.params;
+        Router.replace(`/BusList/${lineNo}/${!reverse}`);
     }
 
     isOnStations = (station) => {
@@ -108,7 +123,7 @@ class BusList extends Component {
                                     return (
                                         <Step
                                             key={item.order}
-                                            icon={<span>{idx}</span>}
+                                            icon={<span>{idx + 1}</span>}
                                             status={this.isOnStations(item) && 'finish'}
                                             title={item.sn}/>
                                     )

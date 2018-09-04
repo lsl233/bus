@@ -6,18 +6,21 @@ import './style.scss';
 export default class History extends Component {
     constructor() {
         super();
+        let history = storage.get('history') || [];
+        console.log('history', history)
+        if (typeof history[0] !== 'object') {
+            storage.clear();
+            history = [];
+        }
         this.state = {
-            history: (storage.get('history') || [])
+            history
         }
     }
 
     removeHistoryItem = (evt, lineNo) => {
         evt.stopPropagation();
-        const history = this.state.history;
-        const idx = history.indexOf(lineNo);
-        if (idx > -1) {
-            history.splice(idx, 1);
-        }
+        const history = storage.get('history').filter((item) => item.lineNo !== lineNo);
+        console.log(history)
         this.setState({ history });
         storage.set('history', history);
     }
@@ -27,14 +30,14 @@ export default class History extends Component {
         return (
             <ul>
                 {
-                    history.map((lineNo, key) => (
+                    history.map((item, key) => (
                         <li key={key}>
                             <Flex justify="between" align="center"
-                                  onClick={() => this.props.router.go(`/BusList/${lineNo}`)}>
-                                <span>{lineNo}路</span>
+                                onClick={() => this.props.router.go(`/BusList/${item.lineNo}/${item.reverse}`)}>
+                                <span>{item.lineNo}路</span>
                                 <Icon
                                     type="cross"
-                                    onClick={(evt) => this.removeHistoryItem(evt, lineNo)}
+                                    onClick={(evt) => this.removeHistoryItem(evt, item.lineNo)}
                                 />
                             </Flex>
                         </li>

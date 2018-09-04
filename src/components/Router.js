@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import pathToRegexp from "path-to-regexp";
+import pathToRegexp from 'path-to-regexp';
 import History from '../containers/History';
 import BusList from '../containers/BusList';
 
@@ -11,18 +11,20 @@ export default class Router extends Component {
                 component: History
             },
             {
-                path: '/BusList/:lineNo',
+                path: '/BusList/:lineNo/:reverse',
                 component: BusList
             }
         ],
         indexRouter: 'History'
-
     }
+
+    static currentParams = {}
 
     constructor(props) {
         super(props);
+        const { hash } = this.splitUrl();
         this.state = {
-            Current: this.props.routers[this.getLocationHash()],
+            Current: this.props.routers[hash],
             params: {},
         }
     }
@@ -32,16 +34,19 @@ export default class Router extends Component {
         window.addEventListener('load', this.handleHashChange, false)
     }
 
-    getLocationHash = () => {
-        return window.location.hash.substring(1) || this.props.indexRouter;
+    splitUrl = () => {
+        const [hash, query] = window.location.hash.substring(1).split('?');
+        return {
+            hash: hash || this.props.indexRouter,
+            query
+        };
     };
 
     handleHashChange = () => {
         const { routers, indexRouter } = this.props;
         let { params } = this.state;
-        const hash = this.getLocationHash();
+        const { hash } = this.splitUrl();
         let component;
-
 
         for (const route of routers) {
             if (route.path === indexRouter) {
@@ -58,18 +63,27 @@ export default class Router extends Component {
                 if (match) {
                     const [, ...values] = match;
                     params = keys.reduce((memo, key, index) => {
-                        memo[key.name] = values[index];
+                        let value = values[index];
+                        try {
+                            value = JSON.parse(values[index]);
+                        } catch(error) {}
+                        memo[key.name] = value;
                         return memo;
                     }, {});
                     component = route.component;
                 }
             }
         }
+        Router.currentParams = params;
         this.setState({ Current: component, params });
     }
 
-    static go = (routerName) => {
-        window.location.hash = routerName
+    static go = (path) => {
+        window.location.hash = `${path}`;
+    }
+
+    static replace = (path) => {
+        window.location.replace(`/#${path}`);
     }
 
     render() {
@@ -79,8 +93,9 @@ export default class Router extends Component {
                 {
                     Current
                     &&
-                    <Current router={{
+                    <Current key={new Date().getTime()} router={{
                         go: Router.go,
+                        replace: Router.replace,
                         params
                     }}/>
                 }

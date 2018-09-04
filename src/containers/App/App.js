@@ -12,19 +12,11 @@ class App extends Component {
     }
 
     componentDidMount() {
-        window.addEventListener('hashchange', this.getLineNo, false);
-        window.addEventListener('load', this.getLineNo, false)
+        this.getLineNo();
     }
 
     getLineNo = () => {
-        const hash = window.location.hash.substring(1);
-        if (hash.indexOf('/BusList') === 0) {
-            const sp = hash.split('/');
-            this.setState({lineNo: sp[sp.length - 1]});
-            return;
-        }
-        this.setState({lineNo: ''});
-        return;
+        this.setState({ lineNo: Router.currentParams.lineNo });
     }
 
     render() {
@@ -36,7 +28,7 @@ class App extends Component {
                     maxLength={8}
                     value={lineNo}
                     onChange={(lineNo) => this.setState({ lineNo })}
-                    onSubmit={(lineNo) => Router.go(`/BusList/${lineNo}`)}
+                    onSubmit={(lineNo) => Router.go(`/BusList/${lineNo}/${true}`)}
                     onFocus={() => Router.go(`/History`)}
                 />
                 <WhiteSpace size="lg"/>
