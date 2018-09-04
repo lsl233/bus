@@ -16,22 +16,21 @@ class App extends Component {
     }
 
     getLineNo = () => {
-        this.setState({ lineNo: Router.currentParams.lineNo });
         setTimeout(() => {
-            console.log(Router.currentParams.lineNo);
-        }, 1000);
-        
+            console.log(Router.currentParams.lineNo)
+            this.setState({ lineNo: Router.currentParams.lineNo.toString() });
+        }, 100);
     }
 
     render() {
         const { lineNo } = this.state;
+        console.log(lineNo)
         return (
             <div>
                 <SearchBar
                     placeholder="请输入公交车线路"
                     maxLength={8}
                     value={lineNo}
-                    defaultValue={Router.currentParams.lineNo}
                     onChange={(lineNo) => this.setState({ lineNo })}
                     onSubmit={(lineNo) => Router.go(`/BusList/${lineNo}/${true}`)}
                     onFocus={() => Router.go(`/History`)}
