@@ -7,7 +7,6 @@ export default class History extends Component {
     constructor() {
         super();
         let history = storage.get('history') || [];
-        console.log('history', history)
         if (typeof history[0] !== 'object') {
             storage.clear();
             history = [];
@@ -20,7 +19,6 @@ export default class History extends Component {
     removeHistoryItem = (evt, lineNo) => {
         evt.stopPropagation();
         const history = storage.get('history').filter((item) => item.lineNo !== lineNo);
-        console.log(history)
         this.setState({ history });
         storage.set('history', history);
     }

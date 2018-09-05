@@ -25,7 +25,6 @@ class BusList extends Component {
     componentDidMount() {
         this.fetchAndIntervalBusInfo();
         location.getCurrentPosition().then((position) => {
-            console.log(position);
             alert(JSON.stringify(position))
         })
     }
@@ -61,7 +60,6 @@ class BusList extends Component {
 
         axios.get('/bus/info', { params: { lineNo, direction: Number(reverse) } })
             .then(response => {
-                console.log(response)
                 const { stations, buses, errmsg } = response.data;
                 if (errmsg) {
                     return 'lineError';

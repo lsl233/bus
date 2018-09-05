@@ -11,19 +11,8 @@ class App extends Component {
         }
     }
 
-    componentDidMount() {
-        this.updateLineNo();
-    }
-
-    updateLineNo = () => {
-        setTimeout(() => {
-            this.setState({ lineNo: Router.currentParams.lineNo });
-        }, 100);
-    }
-
     render() {
         const { lineNo } = this.state;
-        console.log(lineNo)
         return (
             <div>
                 <SearchBar

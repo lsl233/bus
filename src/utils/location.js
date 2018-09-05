@@ -2,7 +2,6 @@ class Location {
     constructor() {
         if (navigator.geolocation) {
             this.geolocation = navigator.geolocation;
-            console.log(this.geolocation.getCurrentPosition)
         } else {
             console.log('该浏览器不支持定位功能！');
         }
@@ -13,7 +12,6 @@ class Location {
         return new Promise((resolve, reject) => {
             this.geolocation.getCurrentPosition((position) => {
                 const { latitude, longitude } = position.coords;
-                console.log(position)
                 resolve({ latitude, longitude })
             }, (error) => {
                 reject(error);

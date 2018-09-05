@@ -23,8 +23,7 @@ export default class Router extends Component {
 
     constructor(props) {
         super(props);
-        const { hash } = this.splitUrl();
-        const { Current, params } = this.handleHashChange();
+        const { Current, params } = this.handleHashChange(false);
         this.state = {
             Current,
             params,
@@ -33,8 +32,7 @@ export default class Router extends Component {
 
     componentDidMount() {
         window.addEventListener('hashchange', this.handleHashChange, false);
-        // this.handleHashChange();
-        window.addEventListener('load', this.handleHashChange, false)
+        window.addEventListener('load', this.handleHashChange, false);
     }
 
     splitUrl = () => {
@@ -45,7 +43,7 @@ export default class Router extends Component {
         };
     };
 
-    handleHashChange = () => {
+    handleHashChange = (mounted = true) => {
         const { routers, indexRouter } = this.props;
         let params = {};
         const { hash } = this.splitUrl();
@@ -78,7 +76,7 @@ export default class Router extends Component {
             }
         }
         Router.currentParams = params;
-        this.setState({ Current: component, params });
+        mounted && this.setState({ Current: component, params });
         return { Current: component, params }
     }
 
@@ -92,7 +90,6 @@ export default class Router extends Component {
 
     render() {
         const { Current, params } = this.state;
-        console.log('params', params)
         return (
             <section>
                 <SearchBar
