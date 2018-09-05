@@ -1,3 +1,7 @@
 .am-steps-small .am-steps-item-custom .am-steps-item-icon > .am-steps-icon {
   top: 0;
 }
+
+.am-steps-item:last-child .am-steps-vertical .am-steps-item-content {
+    height: auto;
+}

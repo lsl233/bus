@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { WingBlank, WhiteSpace, SearchBar as Search } from 'antd-mobile';
+import Footer from '../Footer';
+import './style.scss';
 
 class SearchBar extends Component {
     constructor(props) {
@@ -29,9 +31,10 @@ class SearchBar extends Component {
                     onFocus={() => router.go(`/History`)}
                 />
                 <WhiteSpace size="lg" />
-                <WingBlank size="lg">
+                <WingBlank size="lg" className="main">
                     {children && React.cloneElement(children, {...this.props})}
                 </WingBlank>
+                <Footer />
             </div>
         );
     }

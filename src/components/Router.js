@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import pathToRegexp from 'path-to-regexp';
 import History from '../containers/History';
 import BusList from '../containers/BusList';
-import SearchBar from '../containers/SearchBar';
+import Root from '../containers/Root';
 
 export default class Router extends Component {
     static defaultProps = {
@@ -91,21 +91,19 @@ export default class Router extends Component {
     render() {
         const { Current, params } = this.state;
         return (
-            <section>
-                <SearchBar
-                    router={{
-                        go: Router.go,
-                        replace: Router.replace,
-                        params
-                    }}
-                >
-                    {
-                        Current
-                        &&
-                        <Current />
-                    }
-                </SearchBar>
-            </section>
+            <Root
+                router={{
+                    go: Router.go,
+                    replace: Router.replace,
+                    params
+                }}
+            >
+                {
+                    Current
+                    &&
+                    <Current />
+                }
+            </Root>
         )
     }
 }
