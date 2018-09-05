@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import pathToRegexp from 'path-to-regexp';
 import History from '../containers/History';
 import BusList from '../containers/BusList';
+import SearchBar from '../containers/SearchBar';
 
 export default class Router extends Component {
     static defaultProps = {
@@ -23,14 +24,16 @@ export default class Router extends Component {
     constructor(props) {
         super(props);
         const { hash } = this.splitUrl();
+        const { Current, params } = this.handleHashChange();
         this.state = {
-            Current: this.props.routers[hash],
-            params: {},
+            Current,
+            params,
         }
     }
 
     componentDidMount() {
         window.addEventListener('hashchange', this.handleHashChange, false);
+        // this.handleHashChange();
         window.addEventListener('load', this.handleHashChange, false)
     }
 
@@ -44,7 +47,7 @@ export default class Router extends Component {
 
     handleHashChange = () => {
         const { routers, indexRouter } = this.props;
-        let { params } = this.state;
+        let params = {};
         const { hash } = this.splitUrl();
         let component;
 
@@ -76,6 +79,7 @@ export default class Router extends Component {
         }
         Router.currentParams = params;
         this.setState({ Current: component, params });
+        return { Current: component, params }
     }
 
     static go = (path) => {
@@ -88,21 +92,22 @@ export default class Router extends Component {
 
     render() {
         const { Current, params } = this.state;
+        console.log('params', params)
         return (
             <section>
-                {
-                    Current
-                    &&
-                    <Current
-                        key={new Date().getTime()}
-                        updateLineNo={this.props.updateLineNo}
-                        router={{
-                            go: Router.go,
-                            replace: Router.replace,
-                            params
-                        }}
-                    />
-                }
+                <SearchBar
+                    router={{
+                        go: Router.go,
+                        replace: Router.replace,
+                        params
+                    }}
+                >
+                    {
+                        Current
+                        &&
+                        <Current />
+                    }
+                </SearchBar>
             </section>
         )
     }
