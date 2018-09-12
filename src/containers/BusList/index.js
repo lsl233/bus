@@ -29,13 +29,6 @@ class BusList extends Component {
         })
     }
 
-    // componentWillReceiveProps(nextProps) {
-    //     if (this.props.router.params.reverse !== nextProps.router.params.reverse) {
-    //         this.props.router.params.reverse = nextProps.router.params.reverse;
-    //         this.fetchAndIntervalBusInfo();
-    //     }
-    // }
-
     componentWillUnmount() {
         clearInterval(this.fetchBusInfoInterval);
     }
@@ -43,7 +36,7 @@ class BusList extends Component {
     fetchAndIntervalBusInfo = () => {
         this.fetchBusInfoInterval && clearInterval(this.fetchBusInfoInterval);
         this.fetchBusInfo();
-        this.fetchBusInfoInterval = setInterval(() => this.fetchBusInfo(false), 5000);
+        this.fetchBusInfoInterval = setInterval(() => this.fetchBusInfo(false), 10000);
     }
 
     fetchBusInfo = (isLoading = true) => {
