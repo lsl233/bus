@@ -75,8 +75,9 @@ class BusList extends Component {
                 })
             })
             .catch((error) => {
-                console.error(error);
+                console.error('[get /bus/info]', error);
                 alert('路线错误');
+                Router.go(`/History`);
                 this.setState({
                     loading: false
                 });
