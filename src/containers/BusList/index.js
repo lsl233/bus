@@ -55,8 +55,9 @@ class BusList extends Component {
         axios.get('/bus/info', { params: { lineNo, direction: Number(reverse) } })
             .then(response => {
                 const { stations, buses, errmsg } = response.data;
-                if (errmsg && !stations.legnth) {
-                    return 'lineError';
+                console.log('stations1', stations)
+                if (errmsg || !stations) {
+                    throw new Error('lineError'); 
                 }
 
                 const history = (storage.get('history') || []).filter((item) => item.lineNo !== lineNo);
@@ -105,6 +106,7 @@ class BusList extends Component {
 
     render() {
         const { stations, loading } = this.state;
+        console.log('stations2', stations)
         return (
             <section>
                 {
