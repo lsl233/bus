@@ -55,7 +55,7 @@ class BusList extends Component {
         axios.get('/bus/info', { params: { lineNo, direction: Number(reverse) } })
             .then(response => {
                 const { stations, buses, errmsg } = response.data;
-                if (errmsg) {
+                if (errmsg && !stations.legnth) {
                     return 'lineError';
                 }
 
@@ -77,7 +77,7 @@ class BusList extends Component {
             .catch((error) => {
                 console.error('[get /bus/info]', error);
                 alert('路线错误');
-                Router.go(`/History`);
+                Router.replace(`/History`);
                 this.setState({
                     loading: false
                 });
