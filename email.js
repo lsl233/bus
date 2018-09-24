@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const fs = require('fs');
 const { mailInfo } = require('./config');
 
 nodemailer.createTestAccount((err, account) => {
@@ -12,11 +13,19 @@ nodemailer.createTestAccount((err, account) => {
         }
     });
 
+    let ngrokLogs = 'no logs';
+    try {
+        ngrokLogs = fs.readFileSync('./ngrok.logs', 'utf-8');
+    } catch (error) {
+        console.log(error);
+    }
+
+
     const mailOptions = {
         from: `Fred Foo 👻 <${mailInfo.form}>`,
         to: mailInfo.to,
         subject: 'Hello ✔',
-        text: 'Hello world?',
+        text: ngrokLogs,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
