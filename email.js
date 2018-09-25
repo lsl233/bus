@@ -13,19 +13,28 @@ nodemailer.createTestAccount((err, account) => {
         }
     });
 
-    let ngrokLogs = 'no logs';
+    let ngrokLogs = null;
     try {
-        ngrokLogs = fs.readFileSync('./ngrok.logs', 'utf-8');
+        ngrokLogs = fs.readFileSync('./ngrok.log', 'utf-8');
     } catch (error) {
         console.log(error);
     }
 
+    let html = '';
+    if (ngrokLogs) {
+        const tunnels = JSON.parse(ngrokLogs).tunnels;
+        tunnels.forEach(item => {
+            html += `<p>${item.name}: ${item.public_url}</p>`;
+        })
+    }
+
+
 
     const mailOptions = {
-        from: `Fred Foo 👻 <${mailInfo.form}>`,
+        from: `bus of ngrok update 👻 <${mailInfo.form}>`,
         to: mailInfo.to,
-        subject: 'Hello ✔',
-        text: ngrokLogs,
+        subject: 'bus of ngrok update ✔',
+        html
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
